@@ -1,5 +1,6 @@
 import express from "express";
 import { matchRouter } from "./routes/matches.js";
+import { securityMiddleware } from "../arcjet.js";
 
 const app = express();
 
@@ -8,6 +9,8 @@ app.use(express.json());
 // app.get("/health", (req, res) => {
 //   res.send({ mesage: "Hello from Express server!" });
 // });
+
+app.use(securityMiddleware());
 
 app.use("/matches", matchRouter);
 
