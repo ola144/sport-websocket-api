@@ -1,10 +1,22 @@
-import dotenv from "dotenv";
-dotenv.config({ path: "./.env" });
+import "dotenv/config.js";
+import http from "http";
 
 import app from "./app.js";
+import { attachWebSocketServer } from "./ws/socket.js";
+const server = http.createServer(app);
 
-const port = 8000;
+const PORT = Number(process.env.PORT || 8000);
+const HOST = process.env.HOST || "0.0.0.0";
 
-app.listen(port, () => {
-  console.log("Server is running at port: " + port);
+const { broadcastMatchCreated } = attachWebSocketServer(server);
+app.locals.broadcastMatchCreated = broadcastMatchCreated;
+
+server.listen(PORT, HOST, () => {
+  const baseUrl =
+    HOST === "0.0.0.0" ? `http://localhost:${PORT}` : `http://${HOST}:${PORT}`;
+
+  console.log(`Server is running on ${baseUrl}`);
+  console.log(
+    `Websocket Server is running on ${baseUrl.replace("http", "ws")}/ws`,
+  );
 });
