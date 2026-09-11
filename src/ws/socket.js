@@ -9,10 +9,16 @@ const sendJson = (socket, payload) => {
 };
 
 const broadCast = (wss, payload) => {
-  for (const client of wss.clients) {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify(payload));
+  try {
+    const data = JSON.stringify(payload);
+
+    for (const client of wss.clients) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(data);
+      }
     }
+  } catch (error) {
+    console.log("Broadcast serialization failed:", error);
   }
 };
 

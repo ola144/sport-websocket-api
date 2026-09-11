@@ -23,7 +23,7 @@ matchRouter.post("/", async (req, res) => {
     const parsed = createMatchSchema.safeParse(req.body);
 
     if (!parsed.success) {
-      res.status(400).send({
+      return res.status(400).send({
         success: false,
         message: "Invalid payload.",
       });
