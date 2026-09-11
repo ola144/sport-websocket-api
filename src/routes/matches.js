@@ -23,7 +23,7 @@ matchRouter.post("/", async (req, res) => {
     const parsed = createMatchSchema.safeParse(req.body);
 
     if (!parsed.success) {
-      res.status(400).send({
+      return res.status(400).send({
         success: false,
         message: "Invalid payload.",
       });
@@ -44,6 +44,10 @@ matchRouter.post("/", async (req, res) => {
         status: getMatchStatus(startTime, endTime),
       })
       .returning();
+
+    if (res.app.locals.broadcastMatchCreated) {
+      res.app.locals.broadcastMatchCreated(event);
+    }
 
     res.status(201).json({
       success: true,
