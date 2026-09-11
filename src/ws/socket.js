@@ -35,17 +35,17 @@ export const attachWebSocketServer = (server) => {
       try {
         const decision = await wsArcjet.protect(req);
 
-        if (decision.isDenied()) {
+        if (decision.isDenied) {
           const code = decision.reason.isRateLimit() ? 1013 : 1008;
           const reason = decision.reason.isRateLimit()
             ? "Rate limit exceeded"
-            : "Access Denined";
+            : "Access Denied";
 
-          socket.close(code, reason);
+          return socket.close(code, reason);
         }
       } catch (error) {
         console.log("WS connection error", error);
-        socket.close(1011, "Server security error");
+        return socket.close(1011, "Server security error");
       }
     }
 
